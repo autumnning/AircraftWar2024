@@ -14,13 +14,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btn1 = (Button)findViewById(R.id.begin);
+        Button btn1 = findViewById(R.id.begin);
         btn1.setOnClickListener(this);
     }
 
     public void onClick(View v){
         Intent intent = new Intent(MainActivity.this,OfflineActivity.class);
-//        intent.putExtra("","");
+        intent.putExtra("","");
         startActivity(intent);
     }
 }
