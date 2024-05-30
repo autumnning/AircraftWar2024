@@ -1,5 +1,7 @@
 package com.example.aircraftwar2024.activity;
 
+import android.app.Notification;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.aircraftwar2024.R;
 import com.example.aircraftwar2024.game.BaseGame;
 import com.example.aircraftwar2024.game.EasyGame;
 import com.example.aircraftwar2024.game.HardGame;
@@ -18,7 +21,8 @@ import com.example.aircraftwar2024.game.MediumGame;
 
 public class GameActivity extends AppCompatActivity {
     private static final String TAG = "GameActivity";
-    public Handler mHandler;
+
+    public static Handler mHandler;
 
     private int gameType=0;
     public static int screenWidth,screenHeight;
@@ -28,8 +32,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         getScreenHW();
-
-        mHandler = new Handler();
+        mHandler = new Mhandler();
 
         if(getIntent() != null){
             gameType = getIntent().getIntExtra("gameType",1);
@@ -41,10 +44,12 @@ public class GameActivity extends AppCompatActivity {
             baseGameView = new EasyGame(this);
         } else if (gameType == 2) {
             baseGameView = new MediumGame(this);
+
         } else if (gameType == 3) {
             baseGameView = new HardGame(this);
         }
         setContentView(baseGameView);
+
     }
 
     public void getScreenHW(){
@@ -68,6 +73,15 @@ public class GameActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    class Mhandler extends Handler{
+    class Mhandler extends Handler {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    System.out.println("bbbb");
+                    setContentView(R.layout.activity_record);
+                    break;
+            }
+        }
     }
+
 }

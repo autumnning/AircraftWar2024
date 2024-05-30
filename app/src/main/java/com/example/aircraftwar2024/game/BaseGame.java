@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -14,6 +15,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import com.example.aircraftwar2024.ImageManager;
 import com.example.aircraftwar2024.activity.GameActivity;
+import com.example.aircraftwar2024.activity.MainActivity;
 import com.example.aircraftwar2024.aircraft.AbstractAircraft;
 import com.example.aircraftwar2024.aircraft.AbstractEnemyAircraft;
 import com.example.aircraftwar2024.aircraft.BossEnemy;
@@ -209,6 +211,13 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
             }
             // 后处理
             postProcessAction();
+            if (gameOverFlag) {
+                System.out.println("cccc");
+                Message msg = Message.obtain();
+                msg.what = 1;
+                msg.obj = "gameover";
+                GameActivity.mHandler.sendMessage(msg);
+            }
         };
         task.run();
 
@@ -316,7 +325,6 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
             cycleTime %= cycleDuration;
             return true;
         } else {
-            System.out.println("hhhh");
             return false;
         }
     }
