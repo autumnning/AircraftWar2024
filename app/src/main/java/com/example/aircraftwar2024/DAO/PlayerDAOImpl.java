@@ -26,7 +26,6 @@ public class PlayerDAOImpl implements PlayerDAO {
     /*将玩家信息添加到文件中*/
     public void doAdd(Player player)throws IOException {
 //        JudgeMode();
-        //1.6 分开排行
 //        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("players.txt",true));;
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename,true));
         oos.writeObject(player);

@@ -12,6 +12,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import androidx.annotation.NonNull;
+
+import com.example.aircraftwar2024.DAO.Player;
+import com.example.aircraftwar2024.DAO.PlayerDAO;
+import com.example.aircraftwar2024.DAO.PlayerDAOImpl;
 import com.example.aircraftwar2024.ImageManager;
 import com.example.aircraftwar2024.activity.GameActivity;
 import com.example.aircraftwar2024.aircraft.AbstractAircraft;
@@ -26,6 +30,8 @@ import com.example.aircraftwar2024.factory.enemy_factory.EnemyFactory;
 import com.example.aircraftwar2024.factory.enemy_factory.MobFactory;
 import com.example.aircraftwar2024.supply.AbstractFlyingSupply;
 import com.example.aircraftwar2024.supply.BombSupply;
+
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -103,6 +109,8 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
 
     private boolean gameOverFlag = false;
     private int score = 0;
+
+    protected PlayerDAO playerDAO = new PlayerDAOImpl();
 
 
     /**
@@ -413,6 +421,11 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         flyingSupplies.removeIf(AbstractFlyingObject::notValid);
 
         if (heroAircraft.notValid()) {
+            try{
+                playerDAO.doAdd(new Player("test",score, LocalDateTime.now()));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             gameOverFlag = true;
             mbLoop = false;
             Log.i(TAG, "heroAircraft is not Valid");
