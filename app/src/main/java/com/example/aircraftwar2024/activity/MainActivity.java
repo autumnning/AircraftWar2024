@@ -79,8 +79,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
 //        map.put("score", "");
 //        map.put("time", "");
 //        listitem.add(map);
@@ -98,8 +96,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        map.put("score", "");
 //        map.put("time", "");
 //        listitem.add(map);
-
-
         return listitem;
     }
 }
