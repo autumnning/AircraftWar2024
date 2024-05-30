@@ -18,6 +18,7 @@ import com.example.aircraftwar2024.game.MediumGame;
 
 public class GameActivity extends AppCompatActivity {
     private static final String TAG = "GameActivity";
+    public Handler mHandler;
 
     private int gameType=0;
     public static int screenWidth,screenHeight;
@@ -27,6 +28,8 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         getScreenHW();
+
+        mHandler = new Handler();
 
         if(getIntent() != null){
             gameType = getIntent().getIntExtra("gameType",1);
@@ -63,5 +66,8 @@ public class GameActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    class Mhandler extends Handler{
     }
 }
