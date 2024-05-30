@@ -112,7 +112,7 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
     private boolean gameOverFlag = false;
     private int score = 0;
 
-    protected PlayerDAO playerDAO = new PlayerDAOImpl();
+    protected PlayerDAO playerDAO = new PlayerDAOImpl(getContext());
 
 
     /**

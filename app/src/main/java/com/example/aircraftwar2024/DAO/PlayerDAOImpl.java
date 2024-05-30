@@ -1,5 +1,9 @@
 package com.example.aircraftwar2024.DAO;
 
+import android.content.Context;
+
+import com.example.aircraftwar2024.activity.GameActivity;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDateTime;
@@ -12,6 +16,8 @@ public class PlayerDAOImpl implements PlayerDAO {
     private List<Player> players = new LinkedList<>();
     private String filename = "players.txt";
 
+    private Context context;
+
 //    //判断当前模式对应的文件
 //    public void JudgeMode(){
 //        if(AircraftWarGUI.getGame() instanceof EasyGame){
@@ -23,11 +29,15 @@ public class PlayerDAOImpl implements PlayerDAO {
 //        }
 //    }
 
+    public PlayerDAOImpl(Context context){
+        this.context = context;
+    }
+
     /*将玩家信息添加到文件中*/
     public void doAdd(Player player)throws IOException {
 //        JudgeMode();
 //        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("players.txt",true));;
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename,true));
+        ObjectOutputStream oos = new ObjectOutputStream(context.openFileOutput(filename,Context.MODE_APPEND));
         oos.writeObject(player);
         oos.close();
     }
@@ -42,7 +52,7 @@ public class PlayerDAOImpl implements PlayerDAO {
             fw.flush();
             fw.close();
             for(Player player:players){
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("players.txt",true));
+                ObjectOutputStream oos = new ObjectOutputStream(context.openFileOutput(filename,Context.MODE_APPEND));
                 oos.writeObject(player);
                 oos.close();
             }
@@ -54,10 +64,9 @@ public class PlayerDAOImpl implements PlayerDAO {
 
     public void findByName(String name)throws Exception{
         players = getAllPlayer();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
         for(Player p:players){
             if(p.getName().equals(name)){
-                System.out.println(p.getName()+","+p.getScore()+","+p.getDate().format(formatter));
+                System.out.println(p.getName()+","+p.getScore()+","+p.getDate());
             }
         }
     }
@@ -65,7 +74,7 @@ public class PlayerDAOImpl implements PlayerDAO {
     public List<Player> getAllPlayer()throws Exception{
 //        JudgeMode();
         try {
-            FileInputStream fs = new FileInputStream(filename);
+            FileInputStream fs = context.openFileInput(filename);
             ObjectInputStream ois = new ObjectInputStream(fs);
             Player p;
             while (true) {
