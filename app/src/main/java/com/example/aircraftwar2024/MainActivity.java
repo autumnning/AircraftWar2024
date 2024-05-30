@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onClick(View v){
         Intent intent = new Intent(MainActivity.this,OfflineActivity.class);
-        intent.putExtra("","");
+//        intent.putExtra("","");
         startActivity(intent);
     }
 }

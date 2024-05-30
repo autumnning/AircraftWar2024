@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+<!--    <TextView-->
+<!--        android:id="@+id/difficulty"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="mode"-->
+<!--        tools:layout_editor_absoluteX="16dp"-->
+<!--        tools:layout_editor_absoluteY="33dp" />-->
+
+<!--    <ListView-->
+<!--        android:layout_width="323dp"-->
+<!--        android:layout_height="605dp"-->
+<!--        tools:layout_editor_absoluteX="44dp"-->
+<!--        tools:layout_editor_absoluteY="85dp" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>
