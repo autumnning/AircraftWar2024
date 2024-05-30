@@ -2,11 +2,14 @@ package com.example.aircraftwar2024.DAO;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Player implements Serializable ,Comparable<Player>{
     private String name;
     private int score;
     private LocalDateTime date;
+
+//    private static final long serialVersionUID = 7677585238188092433L;
 
     public Player(String name,int score,LocalDateTime date){
         this.name = name;
@@ -33,8 +36,9 @@ public class Player implements Serializable ,Comparable<Player>{
         this.score = score;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public String getDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
+        return date.format(formatter);
     }
 
     public void setDate(LocalDateTime date) {
