@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -86,6 +87,16 @@ public class GameActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 1:
                     setContentView(R.layout.activity_record);
+                    if(gameType == 1){
+                        TextView mode = findViewById(R.id.difficulty);
+                        mode.setText("难度:简单");
+                    }else if(gameType == 2){
+                        TextView mode = findViewById(R.id.difficulty);
+                        mode.setText("难度:普通");
+                    }else{
+                        TextView mode = findViewById(R.id.difficulty);
+                        mode.setText("难度:困难");
+                    }
                     ListView list = (ListView) findViewById(R.id.scoreTable);
                     //生成适配器的Item和动态数组对应的元素
                     SimpleAdapter listItemAdapter = new SimpleAdapter(
