@@ -56,6 +56,7 @@ public class GameActivity extends AppCompatActivity {
         screenHeight = dm.heightPixels;
 
         Log.i(TAG, "screenWidth : " + screenWidth + " screenHeight : " + screenHeight);
+        System.out.println("githubpush");
     }
 
 
