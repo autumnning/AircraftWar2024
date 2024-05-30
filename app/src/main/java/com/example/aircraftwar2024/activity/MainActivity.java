@@ -13,8 +13,8 @@ import com.example.aircraftwar2024.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    String music = "off";
-
+    String music = "OFF";
+    //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,9 +31,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onClick(View v){
         if (v.getId() == R.id.radioButton3) {
-            music = "on";
+            music = "ON";
         } else if (v.getId() == R.id.radioButton4) {
-            music = "off";
+            music = "OFF";
         } else if (v.getId() == R.id.begin) {
             Intent intent = new Intent(MainActivity.this, OfflineActivity.class);
             intent.putExtra("music", music);
