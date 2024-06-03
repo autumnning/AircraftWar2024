@@ -175,7 +175,6 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         soundPoolMap.put(3,mysp.load(context,R.raw.get_supply,1));//英雄机和非炸弹道具碰撞
         soundPoolMap.put(4,mysp.load(context,R.raw.game_over,1));//游戏结束
 
-        System.out.println("BaseGame中music是"+music);
 
         // 初始化英雄机
         heroAircraft = HeroAircraft.getHeroAircraft();
