@@ -30,6 +30,7 @@ import com.example.aircraftwar2024.factory.enemy_factory.BossFactory;
 import com.example.aircraftwar2024.factory.enemy_factory.EliteFactory;
 import com.example.aircraftwar2024.factory.enemy_factory.EnemyFactory;
 import com.example.aircraftwar2024.factory.enemy_factory.MobFactory;
+import com.example.aircraftwar2024.music.MyMediaPlayer;
 import com.example.aircraftwar2024.supply.AbstractFlyingSupply;
 import com.example.aircraftwar2024.supply.BombSupply;
 
@@ -141,8 +142,12 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
     private final EnemyFactory bossEnemyFactory;
     private final Random random = new Random();
 
+    private MyMediaPlayer myMediaPlayer;
+
     public BaseGame(Context context){
         super(context);
+
+        myMediaPlayer = new MyMediaPlayer(context);
 
         mbLoop = true;
         mPaint = new Paint();  //设置画笔
@@ -184,6 +189,7 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         //new Thread(new Runnable() {
         Runnable task = () -> {
 
+
             // 周期性执行（控制频率）
             if (timeCountAndNewCycleJudge()) {
                 // produceBoss 根据游戏难度策略产生 BOSS
@@ -212,7 +218,6 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
 
             // 撞击检测
             try {
-
                 crashCheckAction();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -220,7 +225,8 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
             // 后处理
             postProcessAction();
             if (gameOverFlag) {
-                System.out.println("cccc");
+//                System.out.println("cccc");
+                myMediaPlayer.bgmStop();
                 Message msg = Message.obtain();
                 msg.what = 1;
                 msg.obj = "gameover";
@@ -243,9 +249,15 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
     protected List<AbstractEnemyAircraft> produceBoss() {
         List<AbstractEnemyAircraft> res = new LinkedList<>();
 
+//        if(!this.existBoss()){
+//            myMediaPlayer.pauseBossBgm();
+//        }
+
         //当得分每超过一次bossScoreThreshold，且当前无boos机存在，则产生一次boss机
         // 普通模式boss机的血量不会变化
         if (this.getScore() >= bossScoreThreshold && !this.existBoss()) {
+            myMediaPlayer.pauseBgm();
+            myMediaPlayer.playBossBgm();
             bossScoreThreshold += bossScoreThreshold;
             res.add(bossEnemyFactory.createEnemyAircraft(bossLevel));
         }
@@ -389,6 +401,10 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
                     enemyAircraft.decreaseHp(bullet.getPower());
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
+                        if(enemyAircraft instanceof  BossEnemy){
+                            myMediaPlayer.pauseBossBgm();
+                            myMediaPlayer.bgmRestart();
+                        }
                         //获得分数，产生道具补给
                         score += enemyAircraft.score();
                         flyingSupplies.addAll(enemyAircraft.generateSupplies());
@@ -523,6 +539,7 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
     @Override
     public void run() {
         /*TODO*/
+        myMediaPlayer.playBgm();
         while (mbLoop) {
             draw();
             action();
