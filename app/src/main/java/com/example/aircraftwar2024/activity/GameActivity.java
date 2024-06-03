@@ -139,14 +139,18 @@ public class GameActivity extends AppCompatActivity {
                                     Toast.makeText(GameActivity.this, "删除第" + (position + 1) + "条记录", Toast.LENGTH_SHORT).show();
 
                                     PlayerDAOImpl playerDAO = new PlayerDAOImpl(GameActivity.this);
-                                    System.out.println("i = "+position);
                                     try {
                                         System.out.println(playerDAO.getAllPlayer().size());
                                         playerDAO.doDelete(position);
                                         if(playerDAO.getAllPlayer().size() == 0){
+//                                            list.removeAllViews();
+//
+//                                            TextView emptyTextView = new TextView(GameActivity.this);
+//                                            emptyTextView.setText("No data");
+//                                            list.addView(emptyTextView);
                                             setContentView(R.layout.activity_record);
                                             Button btn_return = (Button) findViewById(R.id.button);
-
+                                            btn_return.setOnClickListener(Mhandler.this);
 
                                             if(gameType == 1){
                                                 TextView mode = findViewById(R.id.difficulty);
@@ -229,7 +233,9 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void flushAdapter() {
-        // 初始化适配器
+
+
+
         SimpleAdapter simpleAdapter = new SimpleAdapter(
                 this,
                 getData(),
