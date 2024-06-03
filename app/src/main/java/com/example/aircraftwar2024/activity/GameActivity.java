@@ -139,33 +139,53 @@ public class GameActivity extends AppCompatActivity {
                                     Toast.makeText(GameActivity.this, "删除第" + (position + 1) + "条记录", Toast.LENGTH_SHORT).show();
 
                                     PlayerDAOImpl playerDAO = new PlayerDAOImpl(GameActivity.this);
-
+                                    System.out.println("i = "+position);
                                     try {
                                         System.out.println(playerDAO.getAllPlayer().size());
+                                        playerDAO.doDelete(position);
+                                        if(playerDAO.getAllPlayer().size() == 0){
+                                            setContentView(R.layout.activity_record);
+                                            Button btn_return = (Button) findViewById(R.id.button);
+
+
+                                            if(gameType == 1){
+                                                TextView mode = findViewById(R.id.difficulty);
+                                                mode.setText("难度:简单");
+                                            }else if(gameType == 2){
+                                                TextView mode = findViewById(R.id.difficulty);
+                                                mode.setText("难度:普通");
+                                            }else{
+                                                TextView mode = findViewById(R.id.difficulty);
+                                                mode.setText("难度:困难");
+                                            }
+                                        }else{
+                                            flushAdapter();
+                                        }
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
+//                                    System.out.println("1111");
+//                                    List<Player> DataList = null;
 
-                                    List<Player> DataList = null;
-                                    try {
-                                        playerDAO.doDelete(i);
-                                    } catch (Exception e) {
+//                                    try {
+//
+//                                    } catch (Exception e) {
+//
+//                                        e.printStackTrace();
+//                                    }
+//                                    try {
+//                                        DataList = playerDAO.getAllPlayer();
+//                                    } catch (Exception e) {
+//                                        e.printStackTrace();
+//                                    }
 
-                                        e.printStackTrace();
-                                    }
-                                    try {
-                                        DataList = playerDAO.getAllPlayer();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+//                                    try {
+//                                        System.out.println(playerDAO.getAllPlayer().size());
+//                                    } catch (Exception e) {
+//                                        throw new RuntimeException(e);
+//                                    }
 
-                                    try {
-                                        System.out.println(playerDAO.getAllPlayer().size());
-                                    } catch (Exception e) {
-                                        throw new RuntimeException(e);
-                                    }
 
-                                    flushAdapter();
                                 }
                             });
                             builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
@@ -214,9 +234,10 @@ public class GameActivity extends AppCompatActivity {
                 this,
                 getData(),
                 R.layout.activity_item,
-                new String[]{"rank", "usrname", "score", "date"},
+                new String[]{"rank", "usrname", "score", "time"},
                 new int[]{R.id.rank, R.id.usrname, R.id.score, R.id.time}
         );
+
 
         // 添加并显示数据
         list.setAdapter(simpleAdapter);

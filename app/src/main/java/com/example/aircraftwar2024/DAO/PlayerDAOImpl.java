@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.aircraftwar2024.activity.GameActivity;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -47,10 +48,13 @@ public class PlayerDAOImpl implements PlayerDAO {
 //        JudgeMode();
         players.remove(i);
         try{
-            FileWriter fw = new FileWriter(filename);
-            fw.write("");
-            fw.flush();
-            fw.close();
+//            FileWriter fw = new FileWriter(filename);
+//            fw.write("");
+//            fw.flush();
+//            fw.close();
+            FileOutputStream fo = context.openFileOutput(filename,Context.MODE_PRIVATE);
+            fo.write("".getBytes(StandardCharsets.UTF_8));
+            fo.close();
             for(Player player:players){
                 ObjectOutputStream oos = new ObjectOutputStream(context.openFileOutput(filename,Context.MODE_APPEND));
                 oos.writeObject(player);
