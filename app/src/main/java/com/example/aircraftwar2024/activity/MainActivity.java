@@ -14,7 +14,7 @@ import com.example.aircraftwar2024.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    int curruentview;
+    public static ActivityManager activityManager;
 
     String music = "OFF";
     //test
@@ -22,17 +22,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        curruentview = R.layout.activity_main;
-        setContentView(curruentview);
+        setContentView(R.layout.activity_main);
 
         Button btn1 = (Button)findViewById(R.id.begin);
         btn1.setOnClickListener(this);
 
+        activityManager = new ActivityManager();
+        activityManager.addActivity(MainActivity.this);
 
         RadioButton btn_musicON = (RadioButton) findViewById(R.id.radioButton3);
         RadioButton btn_musicOFF = (RadioButton) findViewById(R.id.radioButton4);
         btn_musicON.setOnClickListener(this);
         btn_musicOFF.setOnClickListener(this);
+
     }
 
     public void onClick(View v){
@@ -47,6 +49,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
     }
-
 
 }

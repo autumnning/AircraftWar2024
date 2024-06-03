@@ -24,6 +24,8 @@ public class OfflineActivity extends AppCompatActivity implements View.OnClickLi
 //        Typeface tf = Typeface.createFromAsset(mgr,"fonts/STXINGKA.TTF");
 //        font.setTypeface(tf);
 
+        MainActivity.activityManager.addActivity(this);
+
         String music = getIntent().getStringExtra("music");
 
         Button btn_easy = (Button) findViewById(R.id.easyButton);
