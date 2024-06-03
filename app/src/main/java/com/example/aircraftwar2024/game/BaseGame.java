@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.media.SoundPool;
 import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,6 +19,7 @@ import com.example.aircraftwar2024.DAO.Player;
 import com.example.aircraftwar2024.DAO.PlayerDAO;
 import com.example.aircraftwar2024.DAO.PlayerDAOImpl;
 import com.example.aircraftwar2024.ImageManager;
+import com.example.aircraftwar2024.R;
 import com.example.aircraftwar2024.activity.GameActivity;
 import com.example.aircraftwar2024.activity.MainActivity;
 import com.example.aircraftwar2024.aircraft.AbstractAircraft;
@@ -30,10 +32,12 @@ import com.example.aircraftwar2024.factory.enemy_factory.BossFactory;
 import com.example.aircraftwar2024.factory.enemy_factory.EliteFactory;
 import com.example.aircraftwar2024.factory.enemy_factory.EnemyFactory;
 import com.example.aircraftwar2024.factory.enemy_factory.MobFactory;
+import com.example.aircraftwar2024.music.MySoundPool;
 import com.example.aircraftwar2024.supply.AbstractFlyingSupply;
 import com.example.aircraftwar2024.supply.BombSupply;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -141,7 +145,16 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
     private final EnemyFactory bossEnemyFactory;
     private final Random random = new Random();
 
-    public BaseGame(Context context){
+
+    /**
+     * 播放音乐设置
+     */
+    int music;
+    SoundPool mysp;
+    HashMap<Integer, Integer> soundPoolMap;
+    MySoundPool mySoundPool;
+
+    public BaseGame(Context context, int music){
         super(context);
 
         mbLoop = true;
@@ -150,6 +163,19 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         mSurfaceHolder.addCallback(this);
         this.setFocusable(true);
         ImageManager.initImage(context);
+
+        // 音乐设置
+        this.music = music;
+        mySoundPool = new MySoundPool();
+        mysp = mySoundPool.createSoundPool(mysp);    //创建SoundPool对象
+
+        soundPoolMap = new HashMap<Integer,Integer>();
+        soundPoolMap.put(1,mysp.load(context, R.raw.bullet_hit,1));//子弹射击
+        soundPoolMap.put(2,mysp.load(context,R.raw.bomb_explosion,1));//英雄机和炸弹道具碰撞
+        soundPoolMap.put(3,mysp.load(context,R.raw.get_supply,1));//英雄机和非炸弹道具碰撞
+        soundPoolMap.put(4,mysp.load(context,R.raw.game_over,1));//游戏结束
+
+        System.out.println("BaseGame中music是"+music);
 
         // 初始化英雄机
         heroAircraft = HeroAircraft.getHeroAircraft();
@@ -165,7 +191,6 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         bossEnemyFactory = new BossFactory();
 
         heroController();
-//        action();
     }
     private void heroShootAction() {
         // 英雄射击

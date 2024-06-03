@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +29,7 @@ import com.example.aircraftwar2024.game.BaseGame;
 import com.example.aircraftwar2024.game.EasyGame;
 import com.example.aircraftwar2024.game.HardGame;
 import com.example.aircraftwar2024.game.MediumGame;
+import com.example.aircraftwar2024.music.MySoundPool;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -42,9 +44,12 @@ public class GameActivity extends AppCompatActivity {
     public static Handler mHandler;
 
     private int gameType=0;
+
     public static int screenWidth,screenHeight;
 
     private ListView list;
+
+    public int music;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +64,18 @@ public class GameActivity extends AppCompatActivity {
             gameType = getIntent().getIntExtra("gameType",1);
         }
 
+        music = getIntent().getIntExtra("music", 0);
+        System.out.println("Game中music是"+music);
+
+
         /*TODO:根据用户选择的难度加载相应的游戏界面*/
         BaseGame baseGameView = null;
         if (gameType == 1) {
-            baseGameView = new EasyGame(this);
+            baseGameView = new EasyGame(this, music);
         } else if (gameType == 2) {
-            baseGameView = new MediumGame(this);
-
+            baseGameView = new MediumGame(this, music);
         } else if (gameType == 3) {
-            baseGameView = new HardGame(this);
+            baseGameView = new HardGame(this, music);
         }
         setContentView(baseGameView);
 
@@ -204,11 +212,10 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
+        // 返回首页
         public void onClick(View v) {
             if(v.getId() == R.id.button) {
-                Intent intent = new Intent(GameActivity.this, MainActivity.class);
-                MainActivity.activityManager.finishAllActivity();
-                startActivity(intent);
+                MainActivity.activityManager.finishActivity(GameActivity.this);
             }
         }
     }
