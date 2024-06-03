@@ -14,6 +14,8 @@ import com.example.aircraftwar2024.R;
 
 public class OfflineActivity extends AppCompatActivity implements View.OnClickListener{
 
+    int music;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +28,8 @@ public class OfflineActivity extends AppCompatActivity implements View.OnClickLi
 
         MainActivity.activityManager.addActivity(this);
 
-        String music = getIntent().getStringExtra("music");
+        music = getIntent().getIntExtra("music", 0);
+        System.out.println("Main中music是"+music);
 
         Button btn_easy = (Button) findViewById(R.id.easyButton);
         Button btn_normal = (Button) findViewById(R.id.normalButton);
@@ -45,7 +48,9 @@ public class OfflineActivity extends AppCompatActivity implements View.OnClickLi
         } else if(v.getId() == R.id.hardButton) {
             intent.putExtra("gameType", 3);
         }
+        intent.putExtra("music", music);
         startActivity(intent);
+        MainActivity.activityManager.finishActivity(OfflineActivity.this);
     }
 
 

@@ -9,6 +9,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.example.aircraftwar2024.R;
 
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public static ActivityManager activityManager;
 
-    String music = "OFF";
+    int music = 0;
     //test
 
     @Override
@@ -27,25 +28,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button btn1 = (Button)findViewById(R.id.begin);
         btn1.setOnClickListener(this);
 
-        activityManager = new ActivityManager();
+        activityManager = ActivityManager.getActivityManager();
         activityManager.addActivity(MainActivity.this);
 
-        RadioButton btn_musicON = (RadioButton) findViewById(R.id.radioButton3);
-        RadioButton btn_musicOFF = (RadioButton) findViewById(R.id.radioButton4);
-        btn_musicON.setOnClickListener(this);
-        btn_musicOFF.setOnClickListener(this);
+        RadioGroup btn_music = (RadioGroup) findViewById(R.id.music);
+        btn_music.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(group.getCheckedRadioButtonId() == R.id.radioButton3) {
+                    music = 1;
+                } else if (group.getCheckedRadioButtonId() == R.id.radioButton4) {
+                    music = 0;
+                }
+            }
+        });
 
     }
 
     public void onClick(View v){
-        if (v.getId() == R.id.radioButton3) {
-            music = "ON";
-        } else if (v.getId() == R.id.radioButton4) {
-            music = "OFF";
-        } else if (v.getId() == R.id.begin) {
+        if (v.getId() == R.id.begin) {
             Intent intent = new Intent(MainActivity.this, OfflineActivity.class);
             intent.putExtra("music", music);
-
+            System.out.println("Main中music是"+music);
             startActivity(intent);
         }
     }
