@@ -317,17 +317,17 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
             // 产生敌机
             if (enemyAircrafts.size() < enemyMaxNumber) {
 
+                AbstractEnemyAircraft enemyAircraft;
                 if (random.nextDouble() < eliteProb) {
                     //精英机
-                    res.add(eliteEnemyFactory.createEnemyAircraft(gameLevel));
-                    BombSupply.addEnemy((EnemyObject) eliteEnemyFactory.createEnemyAircraft(gameLevel));
+                    enemyAircraft = eliteEnemyFactory.createEnemyAircraft(gameLevel);
                 }
                 else{
                     //普通敌机
-                    res.add(mobEnemyFactory.createEnemyAircraft(gameLevel));
-                    BombSupply.addEnemy((EnemyObject) mobEnemyFactory.createEnemyAircraft(gameLevel));
+                    enemyAircraft = mobEnemyFactory.createEnemyAircraft(gameLevel);
                 }
-
+                res.add(enemyAircraft);
+                BombSupply.addEnemy((EnemyObject) enemyAircraft);
             }
             return res;
         }
