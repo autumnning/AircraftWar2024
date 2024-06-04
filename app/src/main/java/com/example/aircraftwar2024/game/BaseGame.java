@@ -156,7 +156,6 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
     SoundPool mysp;
     HashMap<Integer, Integer> soundPoolMap;
     MySoundPool mySoundPool;
-    private MyMediaPlayer myMediaPlayer;
 
     public BaseGame(Context context, int music){
         super(context);
