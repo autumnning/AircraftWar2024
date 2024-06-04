@@ -64,5 +64,9 @@ public class BossEnemy extends AbstractEnemyAircraft {
         return 100;
     }
 
+    public void bomb() {
+
+    }
+
 
 }

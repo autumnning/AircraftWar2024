@@ -27,11 +27,13 @@ import com.example.aircraftwar2024.aircraft.AbstractEnemyAircraft;
 import com.example.aircraftwar2024.aircraft.BossEnemy;
 import com.example.aircraftwar2024.aircraft.HeroAircraft;
 import com.example.aircraftwar2024.basic.AbstractFlyingObject;
+import com.example.aircraftwar2024.basic.EnemyObject;
 import com.example.aircraftwar2024.bullet.AbstractBullet;
 import com.example.aircraftwar2024.factory.enemy_factory.BossFactory;
 import com.example.aircraftwar2024.factory.enemy_factory.EliteFactory;
 import com.example.aircraftwar2024.factory.enemy_factory.EnemyFactory;
 import com.example.aircraftwar2024.factory.enemy_factory.MobFactory;
+import com.example.aircraftwar2024.music.MyMediaPlayer;
 import com.example.aircraftwar2024.music.MySoundPool;
 import com.example.aircraftwar2024.supply.AbstractFlyingSupply;
 import com.example.aircraftwar2024.supply.BombSupply;
@@ -203,6 +205,8 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         // 敌机射击
         for (AbstractEnemyAircraft enemyAircraft : enemyAircrafts) {
             enemyBullets.addAll(enemyAircraft.shoot());
+            List temp = enemyBullets;
+            BombSupply.addEnemy((List<EnemyObject>) temp);
         }
     }
     /**
@@ -309,13 +313,16 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
 
             // 产生敌机
             if (enemyAircrafts.size() < enemyMaxNumber) {
+
                 if (random.nextDouble() < eliteProb) {
                     //精英机
                     res.add(eliteEnemyFactory.createEnemyAircraft(gameLevel));
+                    BombSupply.addEnemy((EnemyObject) eliteEnemyFactory.createEnemyAircraft(gameLevel));
                 }
                 else{
                     //普通敌机
                     res.add(mobEnemyFactory.createEnemyAircraft(gameLevel));
+                    BombSupply.addEnemy((EnemyObject) mobEnemyFactory.createEnemyAircraft(gameLevel));
                 }
 
             }
@@ -427,7 +434,7 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
                         if (music == 1) {
-                            if(enemyAircraft instanceof  BossEnemy){
+                            if (enemyAircraft instanceof BossEnemy) {
                                 myMediaPlayer.pauseBossBgm();
                                 myMediaPlayer.bgmRestart();
                             }
@@ -456,6 +463,13 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
             if (heroAircraft.crash(flyingSupply) || flyingSupply.crash(heroAircraft)) {
                 flyingSupply.activate();
                 flyingSupply.vanish();
+                if (music == 1) {
+                    if (flyingSupply instanceof BombSupply) {
+                        mysp.play(soundPoolMap.get(2), 1, 1, 0, 0, 1);
+                    } else {
+                        mysp.play(soundPoolMap.get(3), 1, 1, 0, 0, 1);
+                    }
+                }
             }
         }
     }

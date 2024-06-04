@@ -241,8 +241,6 @@ public class GameActivity extends AppCompatActivity {
 
     private void flushAdapter() {
 
-
-
         SimpleAdapter simpleAdapter = new SimpleAdapter(
                 this,
                 getData(),
@@ -250,7 +248,6 @@ public class GameActivity extends AppCompatActivity {
                 new String[]{"rank", "usrname", "score", "time"},
                 new int[]{R.id.rank, R.id.usrname, R.id.score, R.id.time}
         );
-
 
         // 添加并显示数据
         list.setAdapter(simpleAdapter);

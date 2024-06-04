@@ -1,7 +1,12 @@
 package com.example.aircraftwar2024.supply;
 
 
+import com.example.aircraftwar2024.aircraft.HeroAircraft;
+import com.example.aircraftwar2024.basic.EnemyObject;
+
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,9 +25,33 @@ public class BombSupply extends AbstractFlyingSupply {
         super(locationX, locationY, speedX, speedY);
     }
 
+    private static ArrayList<EnemyObject> enemyList = new ArrayList<EnemyObject>();;
+
+    public static void addEnemy(EnemyObject enemyObject) {
+        enemyList.add(enemyObject);
+    }
+
+    public static void addEnemy(List<EnemyObject> enemyObjects) {
+        for (EnemyObject enemyObject: enemyObjects) {
+            addEnemy(enemyObject);
+        }
+    }
+
+    public static void removeEnemy(EnemyObject enemyObject) {
+        enemyList.remove(enemyObject);
+    }
+
+    public void bombAllEnemy() {
+        for(EnemyObject enemyObject: enemyList) {
+            enemyObject.bomb();
+        }
+    }
+
     @Override
     public void activate() {
-        System.out.println("BombSupply active");
+        System.out.println("BombSupply active!");
+        bombAllEnemy();
+        vanish();
     }
 
 }
