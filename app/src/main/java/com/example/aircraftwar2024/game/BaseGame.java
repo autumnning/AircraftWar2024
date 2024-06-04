@@ -153,9 +153,12 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
     SoundPool mysp;
     HashMap<Integer, Integer> soundPoolMap;
     MySoundPool mySoundPool;
+    private MyMediaPlayer myMediaPlayer;
 
     public BaseGame(Context context, int music){
         super(context);
+
+        myMediaPlayer = new MyMediaPlayer(context);
 
         mbLoop = true;
         mPaint = new Paint();  //设置画笔
@@ -190,6 +193,7 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         bossEnemyFactory = new BossFactory();
 
         heroController();
+//        action();
     }
     private void heroShootAction() {
         // 英雄射击
@@ -236,7 +240,6 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
 
             // 撞击检测
             try {
-
                 crashCheckAction();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -245,6 +248,7 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
             postProcessAction();
             if (gameOverFlag) {
                 if (music == 1) {
+                    myMediaPlayer.bgmStop();
                     mysp.play(soundPoolMap.get(4), 1, 1, 0, 0, 1);
                 }
                 Message msg = Message.obtain();
@@ -272,6 +276,10 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         //当得分每超过一次bossScoreThreshold，且当前无boos机存在，则产生一次boss机
         // 普通模式boss机的血量不会变化
         if (this.getScore() >= bossScoreThreshold && !this.existBoss()) {
+            if (music == 1) {
+                myMediaPlayer.pauseBgm();
+                myMediaPlayer.playBossBgm();
+            }
             bossScoreThreshold += bossScoreThreshold;
             res.add(bossEnemyFactory.createEnemyAircraft(bossLevel));
         }
@@ -418,6 +426,12 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
                     enemyAircraft.decreaseHp(bullet.getPower());
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
+                        if (music == 1) {
+                            if(enemyAircraft instanceof  BossEnemy){
+                                myMediaPlayer.pauseBossBgm();
+                                myMediaPlayer.bgmRestart();
+                            }
+                        }
                         //获得分数，产生道具补给
                         score += enemyAircraft.score();
                         flyingSupplies.addAll(enemyAircraft.generateSupplies());
@@ -440,15 +454,8 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
                 continue;
             }
             if (heroAircraft.crash(flyingSupply) || flyingSupply.crash(heroAircraft)) {
-                if (music == 1) {
-                    if (flyingSupply instanceof BombSupply) {
-                        mysp.play(soundPoolMap.get(2), 1, 1, 0, 0, 1);
-                    } else {
-                        mysp.play(soundPoolMap.get(3), 1, 1, 0, 0, 1);
-                    }
-                    flyingSupply.activate();
-                    flyingSupply.vanish();
-                }
+                flyingSupply.activate();
+                flyingSupply.vanish();
             }
         }
     }
@@ -562,6 +569,9 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
     @Override
     public void run() {
         /*TODO*/
+        if (music == 1) {
+            myMediaPlayer.playBgm();
+        }
         while (mbLoop) {
             draw();
             action();
