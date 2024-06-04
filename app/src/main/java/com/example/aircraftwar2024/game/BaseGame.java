@@ -147,6 +147,7 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
     private final EnemyFactory bossEnemyFactory;
     private final Random random = new Random();
 
+    private MyMediaPlayer myMediaPlayer;
 
     /**
      * 播放音乐设置
@@ -251,6 +252,8 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
             // 后处理
             postProcessAction();
             if (gameOverFlag) {
+//                System.out.println("cccc");
+                myMediaPlayer.bgmStop();
                 if (music == 1) {
                     myMediaPlayer.bgmStop();
                     mysp.play(soundPoolMap.get(4), 1, 1, 0, 0, 1);
@@ -284,6 +287,7 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
                 myMediaPlayer.pauseBgm();
                 myMediaPlayer.playBossBgm();
             }
+
             bossScoreThreshold += bossScoreThreshold;
             res.add(bossEnemyFactory.createEnemyAircraft(bossLevel));
         }
