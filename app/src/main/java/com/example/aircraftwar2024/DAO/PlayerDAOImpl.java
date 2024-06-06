@@ -20,15 +20,15 @@ public class PlayerDAOImpl implements PlayerDAO {
     private Context context;
 
 //    //判断当前模式对应的文件
-//    public void JudgeMode(){
-//        if(AircraftWarGUI.getGame() instanceof EasyGame){
-//            filename = "Easy_players.txt";
-//        } else if (AircraftWarGUI.getGame() instanceof NormalGame) {
-//            filename = "Normal_players.txt";
-//        } else if (AircraftWarGUI.getGame() instanceof HardGame) {
-//            filename = "Hard_players.txt";
-//        }
-//    }
+    public void JudgeMode(){
+        if(GameActivity.getGameType() == 1){
+            filename = "Easy_players.txt";
+        } else if (GameActivity.getGameType() == 2) {
+            filename = "Normal_players.txt";
+        } else if (GameActivity.getGameType() == 3) {
+            filename = "Hard_players.txt";
+        }
+    }
 
     public PlayerDAOImpl(Context context){
         this.context = context;
@@ -36,7 +36,7 @@ public class PlayerDAOImpl implements PlayerDAO {
 
     /*将玩家信息添加到文件中*/
     public void doAdd(Player player)throws IOException {
-//        JudgeMode();
+        JudgeMode();
 //        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("players.txt",true));;
         ObjectOutputStream oos = new ObjectOutputStream(context.openFileOutput(filename,Context.MODE_APPEND));
         oos.writeObject(player);
@@ -76,7 +76,7 @@ public class PlayerDAOImpl implements PlayerDAO {
     }
     /*从文件中获取全部玩家信息*/
     public List<Player> getAllPlayer()throws Exception{
-//        JudgeMode();
+        JudgeMode();
         try {
             FileInputStream fs = context.openFileInput(filename);
             ObjectInputStream ois = new ObjectInputStream(fs);

@@ -43,7 +43,11 @@ public class GameActivity extends AppCompatActivity {
 
     public static Handler mHandler;
 
-    private int gameType=0;
+    public static int getGameType() {
+        return gameType;
+    }
+
+    private static int gameType=0;
 
     public static int screenWidth,screenHeight;
 
