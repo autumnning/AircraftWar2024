@@ -12,8 +12,8 @@ import java.util.List;
 
 public class EasyGame extends BaseGame{
 
-    public EasyGame(Context context, int music) {
-        super(context, music);
+    public EasyGame(Context context, int music, int gameMode) {
+        super(context, music, gameMode);
         this.backGround = ImageManager.BACKGROUND1_IMAGE;
         this.enemyMaxNumber = 2;
     }

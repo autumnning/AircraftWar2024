@@ -1,8 +1,11 @@
 package com.example.aircraftwar2024.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,8 +13,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aircraftwar2024.R;
 
@@ -25,56 +29,81 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class OnlineActivity extends AppCompatActivity implements View.OnClickListener{
 
-    public static ActivityManager activityManager;
+    int music;
 
     private Socket socket;
     private PrintWriter writer;
     private Handler handler;
     private EditText txt;
-    private static  final String TAG = "MainActivity";
-
-    int music = 0;
-    //test
+    String fromserver = null;
+    private static  final String TAG = "OnlineActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_connover);
+        //改字体的
+//        TextView font = findViewById(R.id.choice);
+//        AssetManager mgr = getResources().getAssets();
+//        Typeface tf = Typeface.createFromAsset(mgr,"fonts/STXINGKA.TTF");
+//        font.setTypeface(tf);
 
-        Button btn1 = (Button)findViewById(R.id.begin);
-        btn1.setOnClickListener(this);
-        Button btn2 = (Button)findViewById(R.id.lianji);
-        btn2.setOnClickListener(this);
+        MainActivity.activityManager.addActivity(this);
 
-        activityManager = ActivityManager.getActivityManager();
-        activityManager.addActivity(MainActivity.this);
+        music = getIntent().getIntExtra("music", 0);
 
-        RadioGroup btn_music = (RadioGroup) findViewById(R.id.music);
-        btn_music.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(group.getCheckedRadioButtonId() == R.id.radioButton3) {
-                    music = 1;
-                } else if (group.getCheckedRadioButtonId() == R.id.radioButton4) {
-                    music = 0;
-                }
-            }
-        });
+        new Thread(new NetConn(handler)).start();
 
+        Button btn_easy = (Button) findViewById(R.id.easyButton);
+        Button btn_normal = (Button) findViewById(R.id.normalButton);
+        Button btn_hard = (Button) findViewById(R.id.hardButton);
+        btn_easy.setOnClickListener(this);
+        btn_normal.setOnClickListener(this);
+        btn_hard.setOnClickListener(this);
     }
 
-    public void onClick(View v){
-        if (v.getId() == R.id.begin) {
-            Intent intent = new Intent(MainActivity.this, OfflineActivity.class);
+    public void onClick(View v) {
+        Intent intent = new Intent(OnlineActivity.this, GameActivity.class);
+        TextView waiting = findViewById(R.id.textView);
+        waiting.setVisibility(View.VISIBLE);
+        if(v.getId() == R.id.easyButton) {
+//            builder.setDismissMessage();
+            new Thread(){
+                @Override
+                public void run(){
+                    Log.i(TAG, "send message to server");
+                    writer.println("1");
+                }
+            }.start();
+            intent.putExtra("gameType", 1);
+        } else if(v.getId() == R.id.normalButton) {
+            new Thread(){
+                @Override
+                public void run(){
+                    Log.i(TAG, "send message to server");
+                    writer.println("2");
+                }
+            }.start();
+            intent.putExtra("gameType", 2);
+        } else if(v.getId() == R.id.hardButton) {
+            new Thread(){
+                @Override
+                public void run(){
+                    Log.i(TAG, "send message to server");
+                    writer.println("3");
+                }
+            }.start();
+            intent.putExtra("gameType", 3);
+        }
+        if (fromserver == "fail") {
+            MainActivity.activityManager.finishActivity(OnlineActivity.this);
+        }else {
             intent.putExtra("music", music);
+            intent.putExtra("gameMode", 1);
             startActivity(intent);
-        } else if (v.getId() == R.id.lianji) {
-            new Thread(new NetConn(handler)).start();
-            Intent intent = new Intent(MainActivity.this, OnlineActivity.class);
-            intent.putExtra("music", music);
-            startActivity(intent);
+            MainActivity.activityManager.finishActivity(OnlineActivity.this);
         }
     }
 
@@ -102,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Thread receiveServerMsg =  new Thread(){
                     @Override
                     public void run(){
-                        String fromserver = null;
+
                         try{
                             while((fromserver = in.readLine())!=null)
                             {
@@ -125,5 +154,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
 
 }
