@@ -159,6 +159,12 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
     HashMap<Integer, Integer> soundPoolMap;
     MySoundPool mySoundPool;
 
+    public void setEnemyScore(String enemyScore) {
+        this.enemyScore = enemyScore;
+    }
+
+    private String enemyScore = "0";
+
     public BaseGame(Context context, int music, int gameMode){
         super(context);
 
@@ -457,10 +463,13 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
                         //获得分数，产生道具补给
                         score += enemyAircraft.score();
                         flyingSupplies.addAll(enemyAircraft.generateSupplies());
-                        Message msg = Message.obtain();
-                        msg.what = 3;
-                        msg.obj = "gaming";
-                        GameActivity.mHandler.sendMessage(msg);
+                        if(gameMode == 1){
+                            Message msg = Message.obtain();
+                            msg.what = 3;
+//                            msg.obj = "gaming";
+//                            System.out.println("scoresending");
+                            GameActivity.mHandler.sendMessage(msg);
+                        }
                     }
                     if (music == 1) {
                         mysp.play(soundPoolMap.get(1), 1, 1, 0, 0, 1);
@@ -532,7 +541,9 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         //绘制背景，图片滚动
         canvas.drawBitmap(backGround,0,this.backGroundTop-backGround.getHeight(),mPaint);
         canvas.drawBitmap(backGround,0,this.backGroundTop,mPaint);
-        backGroundTop +=1;
+        if(mbLoop){
+            backGroundTop +=1;
+        }
         if (backGroundTop == GameActivity.screenHeight)
             this.backGroundTop = 0;
 
@@ -580,6 +591,9 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         mPaint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         canvas.drawText("SCORE:"+score,0,30,mPaint);
         canvas.drawText("LIFE:"+heroAircraft.getHp(),0,80,mPaint);
+        if(gameMode == 1){
+            canvas.drawText("Opponent SCORE:"+enemyScore,300,30,mPaint);
+        }
     }
 
     @Override
@@ -610,6 +624,11 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         while (mbLoop) {
             draw();
             action();
+        }
+        if(gameMode == 1){
+            while (true){
+                draw();
+            }
         }
     }
 }

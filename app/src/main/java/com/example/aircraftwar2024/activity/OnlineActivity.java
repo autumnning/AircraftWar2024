@@ -28,20 +28,30 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Objects;
 
 public class OnlineActivity extends AppCompatActivity implements View.OnClickListener{
 
     int music;
 
+
     private Socket socket;
+
+    public int getMusic() {
+        return music;
+    }
+
     private PrintWriter writer;
     private Handler handler;
     private EditText txt;
     String fromserver = null;
     private static  final String TAG = "OnlineActivity";
 
+    private Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("hhhh");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connover);
         //改字体的
@@ -54,7 +64,10 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
 
         music = getIntent().getIntExtra("music", 0);
 
-        new Thread(new NetConn(handler)).start();
+        Thread dd = new Thread(new NetConn(GameActivity.mHandler));
+        dd.start();
+
+        System.out.println(dd.toString());
 
         Button btn_easy = (Button) findViewById(R.id.easyButton);
         Button btn_normal = (Button) findViewById(R.id.normalButton);
@@ -62,10 +75,11 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
         btn_easy.setOnClickListener(this);
         btn_normal.setOnClickListener(this);
         btn_hard.setOnClickListener(this);
+
+        intent = new Intent(OnlineActivity.this, GameActivity.class);
     }
 
     public void onClick(View v) {
-        Intent intent = new Intent(OnlineActivity.this, GameActivity.class);
         TextView waiting = findViewById(R.id.textView);
         waiting.setVisibility(View.VISIBLE);
         if(v.getId() == R.id.easyButton) {
@@ -97,15 +111,11 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
             }.start();
             intent.putExtra("gameType", 3);
         }
-        if (fromserver == "fail") {
-            MainActivity.activityManager.finishActivity(OnlineActivity.this);
-        }else {
-            intent.putExtra("music", music);
-            intent.putExtra("gameMode", 1);
-            startActivity(intent);
-            MainActivity.activityManager.finishActivity(OnlineActivity.this);
-        }
+
     }
+
+
+
 
     protected class NetConn extends Thread{
         private BufferedReader in;
@@ -117,8 +127,10 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public void run(){
             try{
+//                socket = ;
                 socket = new Socket();
-
+                ((MySocket)getApplication()).setSocket(socket);
+//                MySocket mySocket = new MySocket(socket);
                 socket.connect(new InetSocketAddress
                         ("10.0.2.2",9999),5000);
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream(),"utf-8"));
@@ -135,11 +147,26 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
                         try{
                             while((fromserver = in.readLine())!=null)
                             {
+                                System.out.println(fromserver);
+                                if (Objects.equals(fromserver, "fail")) {
+                                    MainActivity.activityManager.finishActivity(OnlineActivity.this);
+                                    System.out.println("faileddd");
+                                    break;
+                                }else if(Objects.equals(fromserver, "success")){
+                                    System.out.println("ffff");
+                                    intent.putExtra("music", music);
+                                    intent.putExtra("gameMode", 1);
+                                    startActivity(intent);
+                                    MainActivity.activityManager.finishActivity(OnlineActivity.this);
+                                }else{
+                                    Message msg = Message.obtain();
+                                    msg.what = 4;
+                                    msg.obj = fromserver;
+                                    System.out.println(fromserver);
+                                    GameActivity.mHandler.sendMessage(msg);
+                                }
                                 //发送消息给UI线程    发送分数
-                                Message msg = new Message();
-                                msg.what = 1;
-                                msg.obj = fromserver;
-                                toClientHandler.sendMessage(msg);
+
                             }
                         }catch (IOException ex){
                             ex.printStackTrace();

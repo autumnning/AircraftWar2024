@@ -71,59 +71,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             intent.putExtra("music", music);
             startActivity(intent);
         } else if (v.getId() == R.id.lianji) {
-            new Thread(new NetConn(handler)).start();
+//            new Thread(new NetConn(handler)).start();
             Intent intent = new Intent(MainActivity.this, OnlineActivity.class);
             intent.putExtra("music", music);
             startActivity(intent);
         }
     }
 
-    protected class NetConn extends Thread{
-        private BufferedReader in;
-        private Handler toClientHandler;
-
-        public NetConn(Handler myHandler){
-            this.toClientHandler = myHandler;
-        }
-        @Override
-        public void run(){
-            try{
-                socket = new Socket();
-
-                socket.connect(new InetSocketAddress
-                        ("10.0.2.2",9999),5000);
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream(),"utf-8"));
-                writer = new PrintWriter(new BufferedWriter(
-                        new OutputStreamWriter(
-                                socket.getOutputStream(),"utf-8")),true);
-                Log.i(TAG,"connect to server");
-
-                //接收服务器返回的数据
-                Thread receiveServerMsg =  new Thread(){
-                    @Override
-                    public void run(){
-                        String fromserver = null;
-                        try{
-                            while((fromserver = in.readLine())!=null)
-                            {
-                                //发送消息给UI线程    发送分数
-                                Message msg = new Message();
-                                msg.what = 1;
-                                msg.obj = fromserver;
-                                toClientHandler.sendMessage(msg);
-                            }
-                        }catch (IOException ex){
-                            ex.printStackTrace();
-                        }
-                    }
-                };
-                receiveServerMsg.start();
-            }catch(UnknownHostException ex){
-                ex.printStackTrace();
-            }catch(IOException ex){
-                ex.printStackTrace();
-            }
-        }
-    }
 
 }

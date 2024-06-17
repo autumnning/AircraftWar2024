@@ -59,6 +59,8 @@ public class GameActivity extends AppCompatActivity {
     public int music;
     public int gameMode;
 
+    private BaseGame baseGameView = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,6 @@ public class GameActivity extends AppCompatActivity {
 
 
         /*TODO:根据用户选择的难度加载相应的游戏界面*/
-        BaseGame baseGameView = null;
         if (gameType == 1) {
             baseGameView = new EasyGame(this, music, gameMode);
         } else if (gameType == 2) {
@@ -223,11 +224,27 @@ public class GameActivity extends AppCompatActivity {
                 case 2:
                     break;
                 case 3:
-                    int score =
-                    writer = new PrintWriter(new BufferedWriter(
-                            new OutputStreamWriter(
-                                    socket.getOutputStream(),"utf-8")),true);
+                    int score = baseGameView.getScore();
+                    System.out.println(score);
+                    new Thread(()->{
+                        try{
+                            writer = new PrintWriter(new BufferedWriter(
+                                    new OutputStreamWriter(
+                                            ((MySocket)getApplication()).getSocket().getOutputStream(),"utf-8")),true);
+                            writer.println(score);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }).start();
+                    break;
+                case 4:
+                    if(msg.obj != null){
+                        System.out.println(msg.obj);
+                        baseGameView.setEnemyScore(msg.obj.toString());
+                    }
+                    break;
             }
+
         }
 
         // 返回首页
