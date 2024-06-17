@@ -21,10 +21,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="328dp"
-        android:text="单机游戏"
+        android:layout_marginTop="264dp"
         android:onClick="toDanji"
+        android:text="单机游戏"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
@@ -45,8 +46,8 @@
             android:id="@+id/radioButton3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="开启音乐"
             android:minHeight="48dp"
+            android:text="开启音乐"
             android:textColor="@color/white" />
 
         <RadioButton
@@ -54,12 +55,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="关闭音乐"
             android:minHeight="48dp"
+            android:text="关闭音乐"
             android:textColor="@color/white" />
 
 
     </RadioGroup>
+
+    <Button
+        android:id="@+id/lianji"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="1dp"
+        android:text="联机对战"
+        app:layout_constraintEnd_toEndOf="@+id/begin"
+        app:layout_constraintTop_toBottomOf="@+id/begin" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,6 +31,9 @@ import com.example.aircraftwar2024.game.HardGame;
 import com.example.aircraftwar2024.game.MediumGame;
 import com.example.aircraftwar2024.music.MySoundPool;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,13 +46,21 @@ public class GameActivity extends AppCompatActivity {
 
     public static Handler mHandler;
 
-    private int gameType=0;
+    public static int getGameType() {
+        return gameType;
+    }
+
+    private static int gameType=0;
 
     public static int screenWidth,screenHeight;
 
     private ListView list;
 
     public int music;
+    public int gameMode;
+
+    private BaseGame baseGameView = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,17 +76,16 @@ public class GameActivity extends AppCompatActivity {
         }
 
         music = getIntent().getIntExtra("music", 0);
-        System.out.println("Game中music是"+music);
+        gameMode = getIntent().getIntExtra("gameMode", 0);
 
 
         /*TODO:根据用户选择的难度加载相应的游戏界面*/
-        BaseGame baseGameView = null;
         if (gameType == 1) {
-            baseGameView = new EasyGame(this, music);
+            baseGameView = new EasyGame(this, music, gameMode);
         } else if (gameType == 2) {
-            baseGameView = new MediumGame(this, music);
+            baseGameView = new MediumGame(this, music, gameMode);
         } else if (gameType == 3) {
-            baseGameView = new HardGame(this, music);
+            baseGameView = new HardGame(this, music, gameMode);
         }
         setContentView(baseGameView);
 
@@ -102,13 +112,16 @@ public class GameActivity extends AppCompatActivity {
     }
 
     class Mhandler extends Handler implements View.OnClickListener{
+
+        PrintWriter writer;
+
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
                     setContentView(R.layout.activity_record);
 
                     Button btn_return = (Button) findViewById(R.id.button);
-                    btn_return.setOnClickListener(this);
+                    btn_return.setOnClickListener(Mhandler.this);
 
                     if(gameType == 1){
                         TextView mode = findViewById(R.id.difficulty);
@@ -131,7 +144,6 @@ public class GameActivity extends AppCompatActivity {
 
                     //添加并且显示
                     list.setAdapter(listItemAdapter);
-
 
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -209,7 +221,30 @@ public class GameActivity extends AppCompatActivity {
                         }
                     });
                     break;
+                case 2:
+                    break;
+                case 3:
+                    int score = baseGameView.getScore();
+                    System.out.println(score);
+                    new Thread(()->{
+                        try{
+                            writer = new PrintWriter(new BufferedWriter(
+                                    new OutputStreamWriter(
+                                            ((MySocket)getApplication()).getSocket().getOutputStream(),"utf-8")),true);
+                            writer.println(score);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }).start();
+                    break;
+                case 4:
+                    if(msg.obj != null){
+                        System.out.println(msg.obj);
+                        baseGameView.setEnemyScore(msg.obj.toString());
+                    }
+                    break;
             }
+
         }
 
         // 返回首页
@@ -252,8 +287,5 @@ public class GameActivity extends AppCompatActivity {
         // 添加并显示数据
         list.setAdapter(simpleAdapter);
     }
-
-
-
 
 }

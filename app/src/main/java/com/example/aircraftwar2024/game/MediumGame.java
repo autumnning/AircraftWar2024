@@ -4,8 +4,8 @@ import android.content.Context;
 import com.example.aircraftwar2024.ImageManager;
 
 public class MediumGame extends BaseGame{
-    public MediumGame(Context context, int music) {
-        super(context, music);
+    public MediumGame(Context context, int music, int gameMode) {
+        super(context, music, gameMode);
         this.backGround = ImageManager.BACKGROUND2_IMAGE;
         this.enemyMaxNumber = 3;
         this.heroShootCycle = 9;
