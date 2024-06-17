@@ -22,6 +22,7 @@ import com.example.aircraftwar2024.ImageManager;
 import com.example.aircraftwar2024.R;
 import com.example.aircraftwar2024.activity.GameActivity;
 import com.example.aircraftwar2024.activity.MainActivity;
+import com.example.aircraftwar2024.activity.OfflineActivity;
 import com.example.aircraftwar2024.aircraft.AbstractAircraft;
 import com.example.aircraftwar2024.aircraft.AbstractEnemyAircraft;
 import com.example.aircraftwar2024.aircraft.BossEnemy;
@@ -153,11 +154,12 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
      * 播放音乐设置
      */
     int music;
+    int gameMode;
     SoundPool mysp;
     HashMap<Integer, Integer> soundPoolMap;
     MySoundPool mySoundPool;
 
-    public BaseGame(Context context, int music){
+    public BaseGame(Context context, int music, int gameMode){
         super(context);
 
         myMediaPlayer = new MyMediaPlayer(context);
@@ -168,6 +170,8 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         mSurfaceHolder.addCallback(this);
         this.setFocusable(true);
         ImageManager.initImage(context);
+
+        this.gameMode = gameMode;
 
         // 音乐设置
         this.music = music;
@@ -256,10 +260,19 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
                     myMediaPlayer.bgmStop();
                     mysp.play(soundPoolMap.get(4), 1, 1, 0, 0, 1);
                 }
-                Message msg = Message.obtain();
-                msg.what = 1;
-                msg.obj = "gameover";
-                GameActivity.mHandler.sendMessage(msg);
+                if (gameMode == 0) {
+                    Message msg = Message.obtain();
+                    msg.what = 1;
+                    msg.obj = "gameover";
+                    //OfflineActivity.mHandler.sendMessage(msg);
+                    GameActivity.mHandler.sendMessage(msg);
+                } else if (gameMode == 1) {
+                    Message msg = Message.obtain();
+                    msg.what = 2;
+                    msg.obj = "gameover";
+                    //OfflineActivity.mHandler.sendMessage(msg);
+                    GameActivity.mHandler.sendMessage(msg);
+                }
             }
         };
         task.run();
@@ -444,6 +457,10 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
                         //获得分数，产生道具补给
                         score += enemyAircraft.score();
                         flyingSupplies.addAll(enemyAircraft.generateSupplies());
+                        Message msg = Message.obtain();
+                        msg.what = 3;
+                        msg.obj = "gaming";
+                        GameActivity.mHandler.sendMessage(msg);
                     }
                     if (music == 1) {
                         mysp.play(soundPoolMap.get(1), 1, 1, 0, 0, 1);
@@ -491,15 +508,17 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         flyingSupplies.removeIf(AbstractFlyingObject::notValid);
 
         if (heroAircraft.notValid()) {
-            try{
-                playerDAO.doAdd(new Player("test",score, LocalDateTime.now()));
-            }catch (Exception e){
-                e.printStackTrace();
+            if (gameMode == 0) {
+                try {
+                    playerDAO.doAdd(new Player("test", score, LocalDateTime.now()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            gameOverFlag = true;
-            mbLoop = false;
-            Log.i(TAG, "heroAircraft is not Valid");
-        }
+                gameOverFlag = true;
+                mbLoop = false;
+                Log.i(TAG, "heroAircraft is not Valid");
+            }
 
     }
 

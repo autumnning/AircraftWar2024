@@ -19,7 +19,7 @@ public class PlayerDAOImpl implements PlayerDAO {
 
     private Context context;
 
-//    //判断当前模式对应的文件
+    //判断当前模式对应的文件
     public void JudgeMode(){
         if(GameActivity.getGameType() == 1){
             filename = "Easy_players.txt";
@@ -37,7 +37,7 @@ public class PlayerDAOImpl implements PlayerDAO {
     /*将玩家信息添加到文件中*/
     public void doAdd(Player player)throws IOException {
         JudgeMode();
-//        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("players.txt",true));;
+        //ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("players.txt",true));;
         ObjectOutputStream oos = new ObjectOutputStream(context.openFileOutput(filename,Context.MODE_APPEND));
         oos.writeObject(player);
         oos.close();
