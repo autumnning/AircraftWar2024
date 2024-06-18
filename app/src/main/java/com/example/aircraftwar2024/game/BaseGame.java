@@ -279,7 +279,7 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
                 } else if (gameMode == 1) {
                     Message msg = Message.obtain();
                     msg.what = 2;
-                    msg.obj = score;
+                    msg.obj = "end";
                     //OfflineActivity.mHandler.sendMessage(msg);
                     GameActivity.mHandler.sendMessage(msg);
                 }
