@@ -80,8 +80,15 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void onClick(View v) {
-        TextView waiting = findViewById(R.id.textView);
-        waiting.setVisibility(View.VISIBLE);
+//        TextView waiting = findViewById(R.id.textView);
+//        waiting.bringToFront();
+//        waiting.setVisibility(View.VISIBLE);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
+        builder.setMessage("匹配中，请等待...");
+        builder.create().show();
+
+
         if(v.getId() == R.id.easyButton) {
 //            builder.setDismissMessage();
             new Thread(){
@@ -158,7 +165,13 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
                                     intent.putExtra("gameMode", 1);
                                     startActivity(intent);
                                     MainActivity.activityManager.finishActivity(OnlineActivity.this);
-                                }else{
+                                }else if(Objects.equals(fromserver, "end")){
+                                    Message msg = Message.obtain();
+                                    msg.what = 5;
+                                    msg.obj = fromserver;
+                                    GameActivity.mHandler.sendMessage(msg);
+                                }
+                                else{
                                     Message msg = Message.obtain();
                                     msg.what = 4;
                                     msg.obj = fromserver;

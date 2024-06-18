@@ -275,7 +275,7 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
                 } else if (gameMode == 1) {
                     Message msg = Message.obtain();
                     msg.what = 2;
-                    msg.obj = "gameover";
+                    msg.obj = score;
                     //OfflineActivity.mHandler.sendMessage(msg);
                     GameActivity.mHandler.sendMessage(msg);
                 }
@@ -313,6 +313,11 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
     public int getScore() {
         return score;
     }
+
+    public boolean isGameOverFlag() {
+        return gameOverFlag;
+    }
+
     private boolean existBoss() {
         for (AbstractEnemyAircraft enemyAircraft : enemyAircrafts) {
             if (enemyAircraft instanceof BossEnemy) {
