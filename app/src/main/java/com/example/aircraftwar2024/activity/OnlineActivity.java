@@ -154,13 +154,13 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
                         try{
                             while((fromserver = in.readLine())!=null)
                             {
-                                System.out.println(fromserver);
+//                                System.out.println(fromserver);
                                 if (Objects.equals(fromserver, "fail")) {
                                     MainActivity.activityManager.finishActivity(OnlineActivity.this);
                                     System.out.println("faileddd");
                                     break;
                                 }else if(Objects.equals(fromserver, "success")){
-                                    System.out.println("ffff");
+//                                    System.out.println("ffff");
                                     intent.putExtra("music", music);
                                     intent.putExtra("gameMode", 1);
                                     startActivity(intent);
