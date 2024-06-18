@@ -165,6 +165,10 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
 
     private String enemyScore = "0";
 
+    private int dieX;
+
+    private int dieY;
+
     public BaseGame(Context context, int music, int gameMode){
         super(context);
 
@@ -530,6 +534,8 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
                 }
             }
                 gameOverFlag = true;
+                dieX = heroAircraft.getLocationX();
+                dieY = heroAircraft.getLocationY();
                 mbLoop = false;
                 Log.i(TAG, "heroAircraft is not Valid");
             }
@@ -564,10 +570,17 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
         paintImageWithPositionRevised(flyingSupplies);//道具
 
 
-        canvas.drawBitmap(ImageManager.HERO_IMAGE,
-                heroAircraft.getLocationX() - ImageManager.HERO_IMAGE.getWidth() / 2,
-                heroAircraft.getLocationY()- ImageManager.HERO_IMAGE.getHeight() / 2,
-                mPaint);
+        if(mbLoop){
+            canvas.drawBitmap(ImageManager.HERO_IMAGE,
+                    heroAircraft.getLocationX() - ImageManager.HERO_IMAGE.getWidth() / 2,
+                    heroAircraft.getLocationY()- ImageManager.HERO_IMAGE.getHeight() / 2,
+                    mPaint);
+        }else{
+            canvas.drawBitmap(ImageManager.HERO_IMAGE,
+                    dieX - ImageManager.HERO_IMAGE.getWidth() / 2,
+                    dieY- ImageManager.HERO_IMAGE.getHeight() / 2,
+                    mPaint);
+        }
 
         //画生命值和分数
         paintScoreAndLife();

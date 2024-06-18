@@ -165,7 +165,7 @@ public class GameActivity extends AppCompatActivity {
 
                                     PlayerDAOImpl playerDAO = new PlayerDAOImpl(GameActivity.this);
                                     try {
-                                        System.out.println(playerDAO.getAllPlayer().size());
+//                                        System.out.println(playerDAO.getAllPlayer().size());
                                         playerDAO.doDelete(position);
                                         if (playerDAO.getAllPlayer().size() == 0) {
 //                                            list.removeAllViews();
@@ -346,7 +346,6 @@ public class GameActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println(listitem.get(0));
         return listitem;
     }
 

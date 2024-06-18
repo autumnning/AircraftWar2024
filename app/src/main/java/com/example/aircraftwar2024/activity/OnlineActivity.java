@@ -1,6 +1,5 @@
 package com.example.aircraftwar2024.activity;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aircraftwar2024.R;
@@ -154,13 +154,13 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
                         try{
                             while((fromserver = in.readLine())!=null)
                             {
-                                System.out.println(fromserver);
+//                                System.out.println(fromserver);
                                 if (Objects.equals(fromserver, "fail")) {
                                     MainActivity.activityManager.finishActivity(OnlineActivity.this);
                                     System.out.println("faileddd");
                                     break;
                                 }else if(Objects.equals(fromserver, "success")){
-                                    System.out.println("ffff");
+//                                    System.out.println("ffff");
                                     intent.putExtra("music", music);
                                     intent.putExtra("gameMode", 1);
                                     startActivity(intent);
@@ -175,7 +175,6 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
                                     Message msg = Message.obtain();
                                     msg.what = 4;
                                     msg.obj = fromserver;
-                                    System.out.println(fromserver);
                                     GameActivity.mHandler.sendMessage(msg);
                                 }
                                 //发送消息给UI线程    发送分数
