@@ -165,7 +165,13 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
                                     intent.putExtra("gameMode", 1);
                                     startActivity(intent);
                                     MainActivity.activityManager.finishActivity(OnlineActivity.this);
-                                }else{
+                                }else if(Objects.equals(fromserver, "end")){
+                                    Message msg = Message.obtain();
+                                    msg.what = 5;
+                                    msg.obj = fromserver;
+                                    GameActivity.mHandler.sendMessage(msg);
+                                }
+                                else{
                                     Message msg = Message.obtain();
                                     msg.what = 4;
                                     msg.obj = fromserver;
