@@ -81,6 +81,7 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
 
     public void onClick(View v) {
         TextView waiting = findViewById(R.id.textView);
+        waiting.bringToFront();
         waiting.setVisibility(View.VISIBLE);
         if(v.getId() == R.id.easyButton) {
 //            builder.setDismissMessage();
