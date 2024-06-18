@@ -239,7 +239,6 @@ public class GameActivity extends AppCompatActivity {
                     break;
                 case 4:
                     if(msg.obj != null){
-                        System.out.println(msg.obj);
                         baseGameView.setEnemyScore(msg.obj.toString());
                     }
                     break;
