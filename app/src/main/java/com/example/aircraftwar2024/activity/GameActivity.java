@@ -65,6 +65,9 @@ public class GameActivity extends AppCompatActivity {
     int score = 0;
     String enemyscore = "0";
 
+    boolean MyOver = false;
+    boolean EnemyOver = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,13 +131,13 @@ public class GameActivity extends AppCompatActivity {
                     Button btn_return = (Button) findViewById(R.id.button);
                     btn_return.setOnClickListener(Mhandler.this);
 
-                    if (gameType == 1) {
+                    if(gameType == 1){
                         TextView mode = findViewById(R.id.difficulty);
                         mode.setText("难度:简单");
-                    } else if (gameType == 2) {
+                    }else if(gameType == 2){
                         TextView mode = findViewById(R.id.difficulty);
                         mode.setText("难度:普通");
-                    } else {
+                    }else{
                         TextView mode = findViewById(R.id.difficulty);
                         mode.setText("难度:困难");
                     }
@@ -144,8 +147,8 @@ public class GameActivity extends AppCompatActivity {
                             GameActivity.this,
                             getData(),
                             R.layout.activity_item,
-                            new String[]{"rank", "usrname", "score", "time"},
-                            new int[]{R.id.rank, R.id.usrname, R.id.score, R.id.time});
+                            new String[]{"rank","usrname","score","time"},
+                            new int[]{R.id.rank,R.id.usrname,R.id.score,R.id.time});
 
                     //添加并且显示
                     list.setAdapter(listItemAdapter);
@@ -167,7 +170,7 @@ public class GameActivity extends AppCompatActivity {
                                     try {
 //                                        System.out.println(playerDAO.getAllPlayer().size());
                                         playerDAO.doDelete(position);
-                                        if (playerDAO.getAllPlayer().size() == 0) {
+                                        if(playerDAO.getAllPlayer().size() == 0){
 //                                            list.removeAllViews();
 //
 //                                            TextView emptyTextView = new TextView(GameActivity.this);
@@ -177,17 +180,17 @@ public class GameActivity extends AppCompatActivity {
                                             Button btn_return = (Button) findViewById(R.id.button);
                                             btn_return.setOnClickListener(Mhandler.this);
 
-                                            if (gameType == 1) {
+                                            if(gameType == 1){
                                                 TextView mode = findViewById(R.id.difficulty);
                                                 mode.setText("难度:简单");
-                                            } else if (gameType == 2) {
+                                            }else if(gameType == 2){
                                                 TextView mode = findViewById(R.id.difficulty);
                                                 mode.setText("难度:普通");
-                                            } else {
+                                            }else{
                                                 TextView mode = findViewById(R.id.difficulty);
                                                 mode.setText("难度:困难");
                                             }
-                                        } else {
+                                        }else{
                                             flushAdapter();
                                         }
                                     } catch (Exception e) {
@@ -228,7 +231,7 @@ public class GameActivity extends AppCompatActivity {
                     break;
                 case 2:
                     score = baseGameView.getScore();
-
+                    MyOver = true;
                     new Thread(() -> {
                         try {
                             writer = new PrintWriter(new BufferedWriter(
@@ -239,12 +242,22 @@ public class GameActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }).start();
-                    if (msg.obj.toString().equals("end")) {
+                    if (EnemyOver&&MyOver) {
+                        new Thread(() -> {
+                            try {
+                                writer = new PrintWriter(new BufferedWriter(
+                                        new OutputStreamWriter(
+                                                ((MySocket) getApplication()).getSocket().getOutputStream(), "utf-8")), true);
+                                writer.println("end");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }).start();
                         new Thread(() -> {
                             Log.i(TAG, "disconnect to server");
                             writer.println("bye");
                         }).start();
-
+                        System.out.println("对面先结束");
                         setContentView(R.layout.activity_online_over);
 
                         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button btn_return_online = (Button) findViewById(R.id.return_online);
@@ -254,10 +267,11 @@ public class GameActivity extends AppCompatActivity {
                         TextView EnemySocre = findViewById(R.id.textView4);
                         MyScore.setText("你的分数" + score);
                         EnemySocre.setText("对手分数" + enemyscore);
+                        break;
                     }
                     break;
                 case 3:
-                    score = baseGameView.getScore();
+                    int score = baseGameView.getScore();
                     System.out.println(score);
                     int finalScore = score;
                     new Thread(()->{
@@ -279,6 +293,34 @@ public class GameActivity extends AppCompatActivity {
                     break;
                 case 5:
                     score = baseGameView.getScore();
+                    System.out.println("自己先结束1");
+                    EnemyOver = true;
+                    if (MyOver&&EnemyOver) {
+                        new Thread(() -> {
+                            try {
+                                writer = new PrintWriter(new BufferedWriter(
+                                        new OutputStreamWriter(
+                                                ((MySocket) getApplication()).getSocket().getOutputStream(), "utf-8")), true);
+                                writer.println("end");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }).start();
+                        new Thread(() -> {
+                            Log.i(TAG, "disconnect to server");
+                            writer.println("bye");
+                        }).start();
+                        System.out.println("自己先结束2");
+                        setContentView(R.layout.activity_online_over);
+
+                        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button btn_return_online = (Button) findViewById(R.id.return_online);
+                        btn_return_online.setOnClickListener(Mhandler.this);
+
+                        TextView MyScore = findViewById(R.id.textView3);
+                        TextView EnemySocre = findViewById(R.id.textView4);
+                        MyScore.setText("你的分数"+score);
+                        EnemySocre.setText("对手分数"+enemyscore);
+                    }
                     System.out.println(score);
                     int finalScore1 = score;
                     new Thread(()->{
@@ -291,32 +333,7 @@ public class GameActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }).start();
-                    if (baseGameView.isGameOverFlag()) {
-                        new Thread(() -> {
-                            try {
-                                writer = new PrintWriter(new BufferedWriter(
-                                        new OutputStreamWriter(
-                                                ((MySocket) getApplication()).getSocket().getOutputStream(), "utf-8")), true);
-                                writer.println("end");
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }).start();
-                        new Thread(() -> {
-                            Log.i(TAG,"disconnect to server");
-                            writer.println("bye");
-                        }).start();
 
-                        setContentView(R.layout.activity_online_over);
-
-                        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button btn_return_online = (Button) findViewById(R.id.return_online);
-                        btn_return_online.setOnClickListener(Mhandler.this);
-
-                        TextView MyScore = findViewById(R.id.textView3);
-                        TextView EnemySocre = findViewById(R.id.textView4);
-                        MyScore.setText("你的分数"+score);
-                        EnemySocre.setText("对手分数"+enemyscore);
-                    }
             }
 
         }
@@ -325,7 +342,7 @@ public class GameActivity extends AppCompatActivity {
         public void onClick(View v) {
             if(v.getId() == R.id.button) {
                 MainActivity.activityManager.finishActivity(GameActivity.this);
-            } else if(v.getId() == R.id.return_online) {
+            }else if(v.getId() == R.id.return_online) {
                 MainActivity.activityManager.finishActivity(GameActivity.this);
             }
         }
