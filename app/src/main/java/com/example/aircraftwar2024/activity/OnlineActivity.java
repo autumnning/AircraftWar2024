@@ -166,6 +166,7 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
                                     startActivity(intent);
                                     MainActivity.activityManager.finishActivity(OnlineActivity.this);
                                 }else if(Objects.equals(fromserver, "end")){
+                                    System.out.println("end from server");
                                     Message msg = Message.obtain();
                                     msg.what = 5;
                                     msg.obj = "end";

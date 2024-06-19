@@ -231,44 +231,49 @@ public class GameActivity extends AppCompatActivity {
                     break;
                 case 2:
                     score = baseGameView.getScore();
-                    MyOver = true;
                     new Thread(() -> {
-                        try {
-                            writer = new PrintWriter(new BufferedWriter(
-                                    new OutputStreamWriter(
-                                            ((MySocket) getApplication()).getSocket().getOutputStream(), "utf-8")), true);
-                            writer.println("end");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        Log.i(TAG, "disconnect to server");
+                        writer.println("bye");
                     }).start();
-                    if (EnemyOver&&MyOver) {
-                        new Thread(() -> {
-                            try {
-                                writer = new PrintWriter(new BufferedWriter(
-                                        new OutputStreamWriter(
-                                                ((MySocket) getApplication()).getSocket().getOutputStream(), "utf-8")), true);
-                                writer.println("end");
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }).start();
-                        new Thread(() -> {
-                            Log.i(TAG, "disconnect to server");
-                            writer.println("bye");
-                        }).start();
-                        System.out.println("对面先结束");
-                        setContentView(R.layout.activity_online_over);
-
-                        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button btn_return_online = (Button) findViewById(R.id.return_online);
-                        btn_return_online.setOnClickListener(Mhandler.this);
-
-                        TextView MyScore = findViewById(R.id.textView3);
-                        TextView EnemySocre = findViewById(R.id.textView4);
-                        MyScore.setText("你的分数" + score);
-                        EnemySocre.setText("对手分数" + enemyscore);
-                        break;
-                    }
+//                    MyOver = true;
+//                    new Thread(() -> {
+//                        try {
+//                            writer = new PrintWriter(new BufferedWriter(
+//                                    new OutputStreamWriter(
+//                                            ((MySocket) getApplication()).getSocket().getOutputStream(), "utf-8")), true);
+//                            System.out.println("先死end");
+//                            writer.println("end");
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }).start();
+//                    if (EnemyOver&&MyOver) {
+//                        new Thread(() -> {
+//                            try {
+//                                writer = new PrintWriter(new BufferedWriter(
+//                                        new OutputStreamWriter(
+//                                                ((MySocket) getApplication()).getSocket().getOutputStream(), "utf-8")), true);
+//                                writer.println("end");
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }).start();
+//                        new Thread(() -> {
+//                            Log.i(TAG, "disconnect to server");
+//                            writer.println("bye");
+//                        }).start();
+//                        System.out.println("对面先结束");
+//                        setContentView(R.layout.activity_online_over);
+//
+//                        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button btn_return_online = (Button) findViewById(R.id.return_online);
+//                        btn_return_online.setOnClickListener(Mhandler.this);
+//
+//                        TextView MyScore = findViewById(R.id.textView3);
+//                        TextView EnemySocre = findViewById(R.id.textView4);
+//                        MyScore.setText("你的分数" + score);
+//                        EnemySocre.setText("对手分数" + enemyscore);
+//                        break;
+//                    }
                     break;
                 case 3:
                     int score = baseGameView.getScore();
@@ -295,7 +300,7 @@ public class GameActivity extends AppCompatActivity {
                     score = baseGameView.getScore();
                     System.out.println("自己先结束1");
                     EnemyOver = true;
-                    if (MyOver&&EnemyOver) {
+//                    if (MyOver&&EnemyOver) {
                         new Thread(() -> {
                             try {
                                 writer = new PrintWriter(new BufferedWriter(
@@ -320,7 +325,7 @@ public class GameActivity extends AppCompatActivity {
                         TextView EnemySocre = findViewById(R.id.textView4);
                         MyScore.setText("你的分数"+score);
                         EnemySocre.setText("对手分数"+enemyscore);
-                    }
+//                    }
                     System.out.println(score);
                     int finalScore1 = score;
                     new Thread(()->{

@@ -265,7 +265,7 @@ public abstract class BaseGame extends SurfaceView implements SurfaceHolder.Call
             // 后处理
             postProcessAction();
             if (gameOverFlag) {
-//                System.out.println("cccc");
+                System.out.println("cccc");
                 if (music == 1) {
                     myMediaPlayer.bgmStop();
                     mysp.play(soundPoolMap.get(4), 1, 1, 0, 0, 1);
